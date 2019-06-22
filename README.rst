@@ -1,87 +1,89 @@
+
 Overview
 ========
 
-日本の株式市場の株価・財務データを取得するツールです。
+这是用来取得日本股票市场的股价，财务数据的工具。
 
-各種データは、 `Yahoo!ファイナンス <http://finance.yahoo.co.jp/>`_ からスクレイピングしています。
+各种数据是从yahoo财经<http://finance.yahoo.co.jp/>上爬虫爬下来的。
 
-動作は、Python2.5 - 2.7 で確認しています。
+环境：Python2.5 - 2.7
 
 Installation
 ============
 
-PyPIからのインストールが簡単です::
+从PyPI来安装很简单:
 
   easy_install jsm
 
 Usage
 =====
 
-jsm.Quotesのインスタンスを作成::
+jsm.Quotesの安装:
 
   import jsm
   q = jsm.Quotes()
 
-以後、作成したインスタンスを使って各種データを取得します。
+安装完后，可以获得他的各种数据。
 
-当日の株価の取得（例ではYahoo!の証券コードを指定）::
-  
-  q.get_price(4689) 
+获得当天的股价（例子里是Yahoo!指定的証券码）:
 
-過去の株価の取得::
-  
+  q.get_price(4689)
+
+获得历史股价数据:
+
   q.get_historical_prices(4689)
 
-デフォルトでは当日から過去1ヶ月のデイリー株価を取得します。
+默认获得当日开始过去1个月的日线数据。
 
-週間, 月間の株価の取得::
+获得週間, 月間的股价:
 
-  q.get_historical_prices(4689, jsm.WEEKLY) # 週間株価を取得
-  q.get_historical_prices(4689, jsm.MONTHLY) # 月間株価を取得
+  q.get_historical_prices(4689, jsm.WEEKLY) # 获得週間股价
+  q.get_historical_prices(4689, jsm.MONTHLY) # 获得月間股价
 
-指定した期間の株価の取得::
-  
+获得指定时期的股价数据:
+
   import datetime
   start_date = datetime.date(2011, 1, 1)
   end_date = datetime.date(2011, 2, 1)
-  q.get_historical_prices(4689, jsm.DAILY, start_date, end_date) # 2011/1/1 〜 2011/2/1までの株価を取得
+  q.get_historical_prices(4689, jsm.DAILY, start_date, end_date) # 2011/1/1 〜 2011/2/1的股价
 
-2000/1/1〜現在までの株価の取得::
+2000/1/1至今的股价:
 
-  q.get_historical_prices(4689, jsm.DAILY, all=True) # 負荷をかけるので要注意
+  q.get_historical_prices(4689, jsm.DAILY, all=True)
 
-株価取得メソッド（get_price, get_historical_prices）の戻り値は、PriceDataクラスのインスタンスです。
+获得股价的方法（method）（get_price, get_historical_prices）的返回值是、PriceData（class）的实例（instance）。
 
-PriceDataについては、下記Data項を参照してください。
+关于PriceData、请参照以下的Data項。
 
-jsmには、取得した株価をCSV形式で保存する為の便利なクラスが用意されています。
+jsm是将获取的股价用CSV形式保存的class。
 
-株価をCSV形式で保存::
+用CSV形式保存:
 
   c = jsm.QuotesCsv()
   c.save_price(4689)
-  c.save_historical_prices(4689) # get_historical_pricesと同じ使い方
+  c.save_historical_prices(4689) # 和get_historical_prices一样的使用方法
 
-対象の財務情報を得る為には、以下のメソッドを利用します。
+为了获得对象的财务情报，请使用以下的method
 
-財務情報の取得::
-  
+获得财务情报:
+
   q.get_finance(4689)
 
-財務情報取得メソッド（get_finance）の戻り値は、FinanceDataクラスのインスタンスです。
+获得财务情报的method（get_finance）的返回值是、class FinanceData的instance。
 
-FinanceDataについては、下記Data項を参照してください。
+关于FinanceData、请参照以下的Data項。
 
-またjsmでは、業種別の銘柄情報を得ることができます。
+还有就是，jsm也可以获得按行业分的銘柄情報。
 
-業種別の銘柄情報を得る為には、以下のメソッドを利用します。
+为了获得按行业分的銘柄情報，请使用以下的method。
+# 銘柄情報：郭理解为会影响股价和股数的因素
 
-業種別の銘柄情報の取得::
-  
-  q.get_brand() # デフォルト：全業種
-  
-また以下のIDを引数に渡すことで、それぞれ業種別の銘柄情報を得ることができます::
+获得按行业分的銘柄情報:
 
+  q.get_brand() # 默认：所有行业
+
+使用以下的ID可以获得不同行业的銘柄情報:
+#不翻了2333郭应该用不上
   '0050' # 農林・水産業
   '1050' # 鉱業
   '2050' # 建設業
@@ -116,9 +118,9 @@ FinanceDataについては、下記Data項を参照してください。
   '8050' # 不動産業
   '9050' # サービス業
 
-銘柄情報取得メソッド（get_brand）の戻り値は、BrandDataクラスのインスタンスです。
+获得銘柄情報的method（get_brand）的返回值是、class BrandData的instance。
 
-BrandDataについては、下記Data項を参照してください。
+关于BrandData、请参考以下的Data項。
 
 Data
 ====
@@ -128,29 +130,28 @@ PriceData::
   date      # 日時
   open      # 初値
   high      # 高値
-  low       # 安値
+  low       # 低値
   close     # 終値
   volume    # 出来高
 
 FinanceData::
 
-  market_cap        # 時価総額
-  shares_issued     # 発行済株式数
-  dividend_yield    # 配当利回り
-  dividend_one      # 1株配当
-  per               # 株価収益率
-  pbr               # 純資産倍率
-  eps               # 1株利益
-  bps               # 1株純資産
-  price_min         # 最低購入代金
-  round_lot         # 単元株数
-  years_high        # 年初来高値
-  years_low         # 年初来安値
+  market_cap        # 時価総額     #股票数*当前单价
+  shares_issued     # 発行済株式数 #已经发行的股票数量
+  dividend_yield    # 配当利回り   #分红利息
+  dividend_one      # 1株配当      #一股分多少
+  per               # 株価収益率   #股价收益率
+  pbr               # 純資産倍率   #1股对应纯资产多少倍
+  eps               # 1株利益      #1股买卖过程赚多少
+  bps               # 1株純資産    #每股对应纯资产是多少
+  price_min         # 最低購入代金  #单次最少买多少钱
+  round_lot         # 単元株数      #一手多少股
+  years_high        # 年初来高値    #当年最高价
+  years_low         # 年初来安値    #当年最低价
 
 BrandData::
 
-  ccode     # 証券コード
+  ccode     # 証券代码
   market    # 市場
   name      # 銘柄名
   info      # 銘柄情報
-
